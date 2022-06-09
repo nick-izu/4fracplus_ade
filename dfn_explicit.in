@@ -100,8 +100,8 @@ END
 #=========================== times ============================================
 TIME
   INITIAL_TIMESTEP_SIZE  1.d-8 y
-  FINAL_TIME 1.0d5 y
-  MAXIMUM_TIMESTEP_SIZE 100.0d0 y
+  FINAL_TIME 1.0d3 y
+  MAXIMUM_TIMESTEP_SIZE 10.0d0 y
   #STEADY_STATE
 END
 
