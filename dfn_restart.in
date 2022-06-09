@@ -15,7 +15,7 @@ SIMULATION
     /
   /
 #  CHECKPOINT
-#    TIMES s 100.0d0
+#    TIMES y 1.0d0
 #  /
   RESTART dfn_explicit-restart.h5 0.
 END
@@ -47,7 +47,7 @@ END
 
 #=========================== fluid properties =================================
 FLUID_PROPERTY
-  DIFFUSION_COEFFICIENT 1.d-9
+  DIFFUSION_COEFFICIENT 1.6d-9
 END
 
 DATASET Permeability
@@ -57,8 +57,8 @@ END
 #=========================== material properties ==============================
 MATERIAL_PROPERTY soil1
   ID 1
-  POROSITY 0.25
-  TORTUOSITY 0.5d0
+  POROSITY 0.005
+  TORTUOSITY 0.2d0
   CHARACTERISTIC_CURVES default
   PERMEABILITY
     DATASET Permeability
@@ -81,7 +81,7 @@ END
 
 #=========================== output options ===================================
 OUTPUT
-  PERIODIC TIME 5.d3 second
+  PERIODIC TIME 5.d4 second
 #  FORMAT TECPLOT BLOCK
   PRINT_PRIMAL_GRID
   FORMAT VTK
@@ -98,17 +98,17 @@ END
 
 #=========================== times ============================================
 TIME
-  INITIAL_TIMESTEP_SIZE  1.d-8 s
-  FINAL_TIME 5.d5 s
-  MAXIMUM_TIMESTEP_SIZE 1.d3 s
+  INITIAL_TIMESTEP_SIZE  1.d-8 y
+  FINAL_TIME 1.0d5 y
+  MAXIMUM_TIMESTEP_SIZE 1.0d1 y
   #STEADY_STATE
 END
 
 #=========================== regions ==========================================
 REGION All
   COORDINATES
-    -5.d20 -5.d20 -5.d20
-    5.d20 5.d20 5.d20
+    -1.d20 -1.d20 -1.d20
+     1.d20  1.d20  1.d20
   /
 END 
 
@@ -152,7 +152,7 @@ FLOW_CONDITION initial
   TYPE
      PRESSURE dirichlet 
   /
-  PRESSURE 1.01325d6
+  PRESSURE 1.0d6
 END
 
 
@@ -167,7 +167,7 @@ FLOW_CONDITION inflow
   TYPE
     PRESSURE dirichlet
   /
-  PRESSURE 1.1d6
+  PRESSURE 1.001d6
 END
 
 #=========================== condition couplers ===============================
