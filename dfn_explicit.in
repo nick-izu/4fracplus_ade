@@ -1,0 +1,198 @@
+# 10th June, 2022
+# 
+#================================================
+
+SIMULATION
+  SIMULATION_TYPE SUBSURFACE
+  PROCESS_MODELS
+    SUBSURFACE_FLOW flow
+      MODE RICHARDS
+    /
+    SUBSURFACE_TRANSPORT transport
+      MODE GIRT
+    /
+  /
+END
+
+SUBSURFACE
+#============================chemistry========================================
+CHEMISTRY
+  PRIMARY_SPECIES
+    Tracer
+  /
+ #RADIOACTIVE_DECAY_REACTION
+ #REACTION Tracer
+ #RATE_CONSTANT 6.9d-3 ! half life at 100 y
+ #/
+
+ #DATABASE /dfnWorks/examples/4frac_ade/hanford.dat
+  OUTPUT
+    TOTAL
+    Tracer
+  /
+END
+
+#=========================== discretization ===================================
+GRID
+  TYPE unstructured_explicit full_mesh_vol_area.uge 
+  GRAVITY 0.d0 0.d0 0.d0
+END
+#=========================== numerical methods ===============================
+NUMERICAL_METHODS TRANSPORT
+  NEWTON_SOLVER
+    ITOL 1.d-8
+  /
+END
+#=========================== fluid properties =================================
+FLUID_PROPERTY
+  DIFFUSION_COEFFICIENT 1.6d-9
+END
+
+DATASET Permeability
+  FILENAME dfn_properties.h5
+END
+
+#=========================== material properties ==============================
+MATERIAL_PROPERTY soil1
+  ID 1
+  POROSITY 0.005
+  TORTUOSITY 0.2d0
+  CHARACTERISTIC_CURVES default
+  PERMEABILITY
+    DATASET Permeability
+  /
+END
+
+#=========================== characteristic curves ============================
+CHARACTERISTIC_CURVES default
+  SATURATION_FUNCTION VAN_GENUCHTEN
+    M 0.5d0
+    ALPHA  1.d-4
+    LIQUID_RESIDUAL_SATURATION 0.1d0
+    MAX_CAPILLARY_PRESSURE 1.d8
+  /
+  PERMEABILITY_FUNCTION MUALEM_VG_LIQ
+    M 0.5d0
+    LIQUID_RESIDUAL_SATURATION 0.1d0
+  /
+END
+
+#=========================== output options ===================================
+OUTPUT
+    MASS_BALANCE_FILE
+      PERIODIC TIME 10 y
+      TOTAL_MASS_REGIONS
+       all
+     /
+   /
+   FORMAT TECPLOT BLOCK
+   FLUXES
+   FLOWRATE
+   MASS_FLOWRATE
+   MASS_BALANCE
+  /
+
+#=========================== times ============================================
+TIME
+  INITIAL_TIMESTEP_SIZE  1.d-3 y
+  FINAL_TIME 1.0d4 y
+  MAXIMUM_TIMESTEP_SIZE 1.d0 y 
+END
+
+#=========================== regions ==========================================
+REGION All
+  COORDINATES
+    -1.d20 -1.d20 -1.d20
+     1.d20  1.d20  1.d20
+  /
+END 
+
+REGION inflow
+  FILE pboundary_left_w.ex
+END
+
+REGION outflow
+  FILE pboundary_right_e.ex
+END
+
+
+#=========================== flow conditions ==================================
+FLOW_CONDITION initial
+  TYPE
+     PRESSURE dirichlet 
+  /
+  PRESSURE 1.0d6
+END
+
+
+FLOW_CONDITION outflow 
+  TYPE 
+     PRESSURE dirichlet
+  /
+  PRESSURE 1.d6
+END
+
+FLOW_CONDITION inflow
+  TYPE
+    PRESSURE dirichlet
+  /
+  PRESSURE 1.001d6
+END
+
+#==========================transport conditions================================
+
+TRANSPORT_CONDITION initial
+  TYPE dirichlet 
+    CONSTRAINT_LIST
+    0.d0 initial
+  /
+END
+
+TRANSPORT_CONDITION inject
+  TYPE dirichlet_zero_gradient
+    CONSTRAINT_LIST
+    0.d0 inlet
+    0.005d0 initial 
+  /
+END
+
+#===============================constraints=====================================
+CONSTRAINT initial
+  CONCENTRATIONS
+    Tracer 1.d-20 T
+  /
+END
+
+CONSTRAINT inlet
+  CONCENTRATIONS
+    Tracer 1.d-3 T
+  /
+END
+
+#=========================== condition couplers ===============================
+# initial condition
+INITIAL_CONDITION
+  FLOW_CONDITION initial
+  TRANSPORT_CONDITION initial
+  REGION All
+END
+
+BOUNDARY_CONDITION INFLOW 
+  FLOW_CONDITION inflow
+  TRANSPORT_CONDITION inject
+  REGION inflow
+END
+
+BOUNDARY_CONDITION OUTFLOW
+  FLOW_CONDITION outflow
+  TRANSPORT_CONDITION inject
+  REGION outflow
+END
+
+#=========================== stratigraphy couplers ============================
+STRATA
+  REGION All 
+  MATERIAL soil1
+END
+
+END_SUBSURFACE
