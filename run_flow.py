@@ -74,9 +74,3 @@ DFN.add_variable_to_mesh("trans,", "transmissivity.dat", "full_mesh.inp")
 #dfnFlow
 DFN.dfn_flow()
 
-restart_file = /dfnWorks/examples/4fracplus_ade/dfn_restart.in"
-
-DFN.pflotran(transient=True,restart=True,restart_file=restart_file)
-DFN.parse_pflotran_vtk_python()       
-DFN.pflotran_cleanup()
-DFN.pflotran_cleanup(index_finish=100,filename=restart_file)
