@@ -40,10 +40,6 @@ END
 #=========================== numerical methods ===============================
 NUMERICAL_METHODS TRANSPORT
   NEWTON_SOLVER
-    ATOL 1.d-8
-    RTOL 1.d-8
-    STOL 1.d-30
-    DTOL 1.d15
     ITOL 1.d-8
   /
 END
@@ -59,8 +55,9 @@ END
 #=========================== material properties ==============================
 MATERIAL_PROPERTY soil1
   ID 1
-  POROSITY 5d-3
-  TORTUOSITY 2d-1
+  POROSITY 5.d-3
+  TORTUOSITY 2.d-1
+  LONGITUDINAL_DISPERSIVITY 100
   CHARACTERISTIC_CURVES default
   PERMEABILITY
     DATASET Permeability
