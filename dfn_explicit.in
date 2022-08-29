@@ -20,12 +20,6 @@ CHEMISTRY
   PRIMARY_SPECIES
     Tracer
   /
- #RADIOACTIVE_DECAY_REACTION
- #REACTION Tracer
- #RATE_CONSTANT 6.9d-3 ! half life at 100 y
- #/
-
- #DATABASE /dfnWorks/examples/4frac_ade/hanford.dat
   OUTPUT
     TOTAL
     Tracer
@@ -57,7 +51,7 @@ MATERIAL_PROPERTY soil1
   ID 1
   POROSITY 5.d-3
   TORTUOSITY 2.d-1
-  LONGITUDINAL_DISPERSIVITY 100
+  LONGITUDINAL_DISPERSIVITY 200
   CHARACTERISTIC_CURVES default
   PERMEABILITY
     DATASET Permeability
@@ -137,14 +131,14 @@ END
 #==========================transport conditions================================
 
 TRANSPORT_CONDITION initial
-  TYPE zero_gradient 
+  TYPE dirichlet_zero_gradient 
     CONSTRAINT_LIST
     0.d0 initial
   /
 END
 
 TRANSPORT_CONDITION inject
-  TYPE dirichlet_zero_gradient
+  TYPE zero_gradient
     CONSTRAINT_LIST
     0.d0 inlet
     
