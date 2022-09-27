@@ -24,7 +24,6 @@ DFN.mesh_network(visual_mode=False)
 # Definition of fracture parameters
 porosity = 1.0
 tortuosity= 1.0
-longitudinal_dispersivity= 100
 
 variable = "transmissivity"
 function = "correlated"
